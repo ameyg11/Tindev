@@ -1,25 +1,23 @@
 const express = require("express");
 
 const app = express();
-const  { adminAuth } = require("./middleware/auth");
 
-app.use("/admin", adminAuth);
-
-app.use("/admin/data", (req, res) => {
-    res.send("data is fetched")
+app.use("/user", (req, res) => {
+    // throw new Error("asdfg");
+    // res.send("this is user");
+    try {
+        throw new Error("asdfg");
+        res.send("this is user");
+    }catch(err){
+        res.status(500).send("something went wrong try again")
+    }
 })
 
-app.use("/users",(req, res, next) => {
-    console.log("1st console");
-    res.send("hello");
-    next();
-    },
-    (req, res) => {
-        console.log("2nd console");
-        // res.send("2nd response");
-    }
-);
-
+// app.use("/", (err, req, res, next) => {
+//     if(err){
+//         res.status(404).send("contact admin support")
+//     }
+// })
 
 app.listen(7777, ()=> {
     console.log("Server is running successfully running on port 7777...");

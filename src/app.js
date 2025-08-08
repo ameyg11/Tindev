@@ -9,7 +9,7 @@ app.use("/users",(req, res, next) => {
     },
     (req, res) => {
         console.log("2nd console");
-        res.send("2nd response");
+        // res.send("2nd response");
         
     }
 );

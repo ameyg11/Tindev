@@ -1,11 +1,12 @@
+const connectDB = require("./config/database");
 const express = require("express");
 const app = express();
 const User = require("./models/user")
 
-const connectDB = require("./config/database");
-
 app.use(express.json())
 
+
+// posting data to database
 app.post("/signup", async (req, res) => {
     console.log(req.body);
     
@@ -21,10 +22,39 @@ app.post("/signup", async (req, res) => {
 
     try {
         // throw new Error("1234567")
+        console.log(req.body)
         await user.save();
         res.send("new user logged In")
     }catch(err) {
         res.send("there was some error")
+    }
+
+})
+
+// getting data from database 
+app.get("/user", async (req, res) => {
+
+    const userMail = req.body.emailID;
+
+    try{
+        const user = await User.find({ emailId: userMail})
+        res.send(user);
+    }catch(err){
+        res.send("Something Went Wrong")
+    }
+
+})
+
+app.get("/feed", async (req, res) => {
+
+    // const userMail = req.body.emailID;
+
+    try{
+        const user = await User.find({})
+        res.send(user);
+        // console.log(user)
+    }catch(err){
+        res.send("Something Went Wrong")
     }
 
 })

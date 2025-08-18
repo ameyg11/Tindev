@@ -8,7 +8,7 @@ app.use(express.json())
 
 // posting data to database
 app.post("/signup", async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     
     {/*const userObj = {
         firstName: "Virat",
@@ -26,7 +26,7 @@ app.post("/signup", async (req, res) => {
         await user.save();
         res.send("new user logged In")
     }catch(err) {
-        res.send("there was some error")
+        res.send("there was some error",err)
     }
 
 })
@@ -72,15 +72,17 @@ app.delete("/user", async (req, res) => {
 
 app.patch("/user", async(req, res) => {
     const userId = req.body.userId;
+    const data = req.body;
 
     try{
-        const user = await User.findByIdAndUpdate(userId, {firstName: "Ameeeyyyy"}, 
-            options.returnDocument='after'
-        )
+        const user = await User.findByIdAndUpdate(userId, data, {
+            returnDocument: 'after',
+            runValidators: true,
+    })
         res.send("User updated successfully")
         console.log(user);
     }catch(err){
-        res.status(400).send("Something went wrong")
+        res.status(400).send("Something went wrong" + err.message)
     }
 })
 

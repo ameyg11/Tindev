@@ -70,6 +70,20 @@ app.delete("/user", async (req, res) => {
     }
 })
 
+app.patch("/user", async(req, res) => {
+    const userId = req.body.userId;
+
+    try{
+        const user = await User.findByIdAndUpdate(userId, {firstName: "Ameeeyyyy"}, 
+            options.returnDocument='after'
+        )
+        res.send("User updated successfully")
+        console.log(user);
+    }catch(err){
+        res.status(400).send("Something went wrong")
+    }
+})
+
 connectDB()
     .then(() => {
         console.log("database successfully connected");

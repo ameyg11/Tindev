@@ -80,6 +80,10 @@ app.patch("/user/:userId", async (req, res) => {
       throw new Error("Updates of this field are not allowed");
     }
 
+    if(data.skills.length > 10){
+        throw new Error("Skills should be less than 5");
+    }
+
     const user = await User.findByIdAndUpdate(userId, data, {
       returnDocument: "after",
       runValidators: true,

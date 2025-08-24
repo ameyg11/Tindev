@@ -2,32 +2,25 @@ const connectDB = require("./config/database");
 const express = require("express");
 const app = express();
 const User = require("./models/user");
+const { validateSignUpData } = require("./utils/validations");
 
 app.use(express.json());
 
 // posting data to database
 app.post("/signup", async (req, res) => {
-  // console.log(req.body);
-
-  {
-    /*const userObj = {
-        firstName: "Virat",
-        lastName: "Kohli",
-        emailId: "viraat@gmail.com",
-        password: "98765321"
-    }*/
-  }
-
   // Creating a new instance of a User model
   const user = new User(req.body);
 
   try {
-    // throw new Error("1234567")
-    console.log(req.body);
+    // validating user
+    validateSignUpData(req);
+
+    // Encrypt passwords
+
     await user.save();
     res.send("new user logged In");
   } catch (err) {
-    res.send("there was some error", err);
+    res.send("ERROR : " + err);
   }
 });
 
@@ -73,15 +66,15 @@ app.patch("/user/:userId", async (req, res) => {
   try {
     const ALLOWED_UPDATES = ["photoUrl", "age", "skills"];
     const isUpdatedAllowed = Object.keys(data).every((k) => {
-        return ALLOWED_UPDATES.includes(k);
+      return ALLOWED_UPDATES.includes(k);
     });
 
     if (!isUpdatedAllowed) {
       throw new Error("Updates of this field are not allowed");
     }
 
-    if(data.skills.length > 10){
-        throw new Error("Skills should be less than 5");
+    if (data.skills.length > 10) {
+      throw new Error("Skills should be less than 5");
     }
 
     const user = await User.findByIdAndUpdate(userId, data, {

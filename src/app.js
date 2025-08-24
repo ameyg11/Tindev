@@ -8,7 +8,6 @@ const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
-// posting data to database
 app.post("/signup", async (req, res) => {
   try {
     // validating user
@@ -30,6 +29,30 @@ app.post("/signup", async (req, res) => {
 
     await user.save();
     res.send("new user logged In");
+  } catch (err) {
+    res.send("ERROR : " + err);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const {emailId, password} = req.body;
+    
+    const user = await User.findOne({ emailId });
+
+    if(!user){
+        throw new Error("Invalid creadentials!!");
+    }
+    console.log(user)
+
+    const iSPasswordValid = await bcrypt.compare(password, user.password);
+
+    if(!iSPasswordValid){
+        throw new Error("Invalid creadentials!!");
+    }else{
+        res.send("Logged in successfully!!");
+    }
+
   } catch (err) {
     res.send("ERROR : " + err);
   }

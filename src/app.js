@@ -48,13 +48,14 @@ app.post("/login", async (req, res) => {
         throw new Error("Invalid creadentials!!");
     }
 
-    const iSPasswordValid = await bcrypt.compare(password, user.password);
+    const iSPasswordValid = await user.validatePassword(password);
 
     if(iSPasswordValid){
 
-      // JWT tokens
+      // const token = await jwt.sign({ _id: user._id}, "tin@dev1110", {expiresIn: "30d"})
+      const token = await user.getJWT();
+      console.log(token);
 
-      const token = await jwt.sign({ _id: user._id}, "tin@dev1110")
       // Cookies
       res.cookie("token", token);
 
@@ -78,69 +79,12 @@ app.get("/profile", userAuth, async(req, res) => {
   
 })
 
-// getting data from database
-app.get("/user", async (req, res) => {
-  const userMail = req.body.emailID;
+app.post("/sendConnectionRequest", userAuth, async(req, res) => {
 
-  try {
-    const user = await User.find({ emailId: userMail });
-    res.send(user);
-  } catch (err) {
-    res.send("Something Went Wrong");
-  }
-});
-
-app.get("/feed", async (req, res) => {
-  // const userMail = req.body.emailID;
-
-  try {
-    const user = await User.find({});
-    res.send(user);
-    // console.log(user)
-  } catch (err) {
-    res.send("Something Went Wrong");
-  }
-});
-
-app.delete("/user", async (req, res) => {
-  const userID = req.body.userId;
-
-  try {
-    await User.findByIdAndDelete(userID);
-    res.send("User deleted successfully");
-  } catch (err) {
-    res.status(400).send("Something went wrong");
-  }
-});
-
-app.patch("/user/:userId", async (req, res) => {
-  const userId = req.params?.userId;
-  const data = req.body;
-
-  try {
-    const ALLOWED_UPDATES = ["photoUrl", "age", "skills"];
-    const isUpdatedAllowed = Object.keys(data).every((k) => {
-      return ALLOWED_UPDATES.includes(k);
-    });
-
-    if (!isUpdatedAllowed) {
-      throw new Error("Updates of this field are not allowed");
-    }
-
-    if (data.skills.length > 10) {
-      throw new Error("Skills should be less than 5");
-    }
-
-    const user = await User.findByIdAndUpdate(userId, data, {
-      returnDocument: "after",
-      runValidators: true,
-    });
-    res.send("User updated successfully");
-    console.log(user);
-  } catch (err) {
-    res.status(400).send("Something went wrong: " + err.message);
-  }
-});
+  const user = req.user;
+  console.log(user);
+  res.send(user.firstName + " sent a connection request");
+})
 
 connectDB()
   .then(() => {

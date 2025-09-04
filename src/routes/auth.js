@@ -1,7 +1,7 @@
-const { validateSignUpData } = require("./utils/validations");
-const User = require("./models/user");
+const { validateSignUpData } = require("../utils/validations");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { userAuth } = require("./middleware/auth")
+const { userAuth } = require("../middleware/auth")
 
 
 const express = require("express");

@@ -1,3 +1,9 @@
+const { validateSignUpData } = require("./utils/validations");
+const User = require("./models/user");
+const bcrypt = require("bcrypt");
+const { userAuth } = require("./middleware/auth")
+
+
 const express = require("express");
 
 const authRouter = express.Router();
@@ -60,4 +66,4 @@ authRouter.post("/login", async (req, res) => {
 });
 
 
-module.export = authRouter;
+module.exports = authRouter;

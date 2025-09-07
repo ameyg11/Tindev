@@ -5,7 +5,6 @@ const { userAuth } = require("../middleware/auth")
 
 
 const express = require("express");
-
 const authRouter = express.Router();
 
 authRouter.post("/signup", async (req, res) => {

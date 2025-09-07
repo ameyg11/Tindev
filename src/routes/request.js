@@ -1,8 +1,7 @@
 const { userAuth } = require("../middleware/auth")
-
+const ConnectionRequestModel = require("../models/connectionRequest");
 
 const express = require("express");
-
 const requestRouter = express.Router();
 
 requestRouter.post("/sendConnectionRequest", userAuth, async(req, res) => {

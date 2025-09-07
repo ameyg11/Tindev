@@ -3,7 +3,6 @@ const { validateEditData } = require("../utils/validations");
 const bcrypt = require("bcrypt");
 
 const express = require("express");
-
 const profileRouter = express.Router();
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {

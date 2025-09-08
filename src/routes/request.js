@@ -4,11 +4,15 @@ const ConnectionRequestModel = require("../models/connectionRequest");
 const express = require("express");
 const requestRouter = express.Router();
 
-requestRouter.post("/sendConnectionRequest", userAuth, async(req, res) => {
-
-  const user = req.user;
-  console.log(user);
-  res.send(user.firstName + " sent a connection request");
+requestRouter.post(
+  "/request/send/:status/:toUserId",
+  userAuth, 
+  async(req, res) => {
+    try{
+      const fromUserId = req.user._id;
+    }catch{
+      res.status(400).send("")
+    }
 })
 
 module.exports = requestRouter;

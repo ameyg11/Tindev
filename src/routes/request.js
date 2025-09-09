@@ -1,7 +1,8 @@
 const { userAuth } = require("../middleware/auth")
-const ConnectionRequestModel = require("../models/connectionRequest");
+const ConnectionRequest = require("../models/connectionRequest");
 
 const express = require("express");
+const User = require("../models/user");
 const requestRouter = express.Router();
 
 requestRouter.post(
@@ -10,8 +11,52 @@ requestRouter.post(
   async(req, res) => {
     try{
       const fromUserId = req.user._id;
-    }catch{
-      res.status(400).send("")
+      const toUserId = req.params.toUserId;
+      const status = req.params.status;
+
+      // if(fromUserId == toUserId) return res.status(400).json({message: "You are who you are : Cannot send request to same user"})
+
+      const toUser = await User.findById( toUserId );
+      if(!toUser){
+        return res.status(400).json({message: "User does not exists"})
+      }
+
+      const allowedStatus = ["interested", "ignored"];
+      if(!allowedStatus.includes(status)){
+        return res
+          .status(400)
+          .json({message: "Invalid status type: " +status});
+      };
+
+      const existingConnectionRequest = await ConnectionRequest.findOne({
+        $or:
+        [ { fromUserId, toUserId },
+          { fromUserId: toUserId, toUserId: fromUserId }
+        ]
+      });
+
+
+      if(existingConnectionRequest){
+        return res
+          .status(400)
+          .json({message: "Connection request already exists"})
+      }
+
+      const connectionRequest = new ConnectionRequest({
+        fromUserId,
+        toUserId,
+        status,
+      });
+
+      const data = await connectionRequest.save();
+
+      res.json({ 
+        message: req.user.firstName +  " is " + status+ " in " + toUser.firstName,
+        data
+      })
+
+    }catch(err){
+      res.status(400).send(""+err)
     }
 })
 

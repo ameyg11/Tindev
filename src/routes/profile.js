@@ -37,8 +37,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.patch("/profile/password", userAuth, async (req, res) => {
-  try {
+profileRouter.patch("/profile/password", userAuth, async (req, res) => { try {
     const user = req.user;
     console.log(req.body.currentPassword);
     console.log("old pass hash: " + user.password);

@@ -49,12 +49,12 @@ authRouter.post("/login", async (req, res) => {
 
       // const token = await jwt.sign({ _id: user._id}, "tin@dev1110", {expiresIn: "30d"})
       const token = await user.getJWT();
-      console.log(token);
+      // console.log(token);
 
       // Cookies
       res.cookie("token", token);
 
-      res.send("Logged in successfully!!");
+      res.send(user);
     }else{
       throw new Error("Invalid creadentials!!");
     }

@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   },
   photoUrl: {
     type: String,
-    default: "https://www.bing.com/images/search?view=detailV2&ccid=nbiEEr9f&id=DDEFE2E72C3C50B8681DD1457480F4BA1725E888&thid=OIP.nbiEEr9fr4P-UslubiE1RQHaHa&mediaurl=https%3a%2f%2fstatic.vecteezy.com%2fsystem%2fresources%2fpreviews%2f024%2f983%2f914%2fnon_2x%2fsimple-user-default-icon-free-png.png&exph=980&expw=980&q=default+user+image&FORM=IRPRST&ck=41DB74037B011D0FD96E1EA6B86C71F7&selectedIndex=1&itb=1",
+    default: "https://i.pinimg.com/736x/14/43/55/144355d7b36c5f646435423798281ce9.jpg",
     validate(value){
       if(!validator.isURL(value)){
         throw new Error("E-mail is not valid: ",value);

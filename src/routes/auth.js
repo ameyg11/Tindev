@@ -1,8 +1,7 @@
 const { validateSignUpData } = require("../utils/validations");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { userAuth } = require("../middleware/auth")
-
+const { userAuth } = require("../middleware/auth");
 
 const express = require("express");
 const authRouter = express.Router();
@@ -16,7 +15,7 @@ authRouter.post("/signup", async (req, res) => {
 
     // Encrypt passwords
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log(passwordHash);
+    // console.log(passwordHash);
 
     // Creating a new instance of a User model
     const user = new User({
@@ -29,24 +28,23 @@ authRouter.post("/signup", async (req, res) => {
     await user.save();
     res.send("new user logged In");
   } catch (err) {
-    res.send("ERROR : " + err);
+    res.json({message: "ERROR : "} + err);
   }
 });
 
 authRouter.post("/login", async (req, res) => {
   try {
-    const {emailId, password} = req.body;
-    
+    const { emailId, password } = req.body;
+
     const user = await User.findOne({ emailId });
 
-    if(!user){
-        throw new Error("Invalid creadentials!!");
+    if (!user) {
+      throw new Error("Invalid creadentials!!");
     }
 
     const iSPasswordValid = await user.validatePassword(password);
 
-    if(iSPasswordValid){
-
+    if (iSPasswordValid) {
       // const token = await jwt.sign({ _id: user._id}, "tin@dev1110", {expiresIn: "30d"})
       const token = await user.getJWT();
       // console.log(token);
@@ -55,12 +53,11 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token);
 
       res.send(user);
-    }else{
+    } else {
       throw new Error("Invalid creadentials!!");
     }
-
   } catch (err) {
-    res.send("ERROR : " + err);
+      res.status(401).json({message: "Invalid Credentials"});
   }
 });
 
@@ -69,7 +66,6 @@ authRouter.post("/logout", async (req, res) => {
     expires: new Date(Date.now()),
   });
   res.send("Logout Successfully!!");
-})
-
+});
 
 module.exports = authRouter;

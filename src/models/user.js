@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
   },
   photoUrl: {
     type: String,
-    default: "https://i.pinimg.com/736x/14/43/55/144355d7b36c5f646435423798281ce9.jpg",
+    default: "https://i.pinimg.com/736x/21/f6/fc/21f6fc4abd29ba736e36e540a787e7da.jpg",
     validate(value){
       if(!validator.isURL(value)){
         throw new Error("E-mail is not valid: ",value);

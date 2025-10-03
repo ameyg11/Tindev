@@ -52,7 +52,7 @@ requestRouter.post(
 
       res.json({ 
         message: req.user.firstName +  " is " + status+ " in " + toUser.firstName,
-        data
+        data: data
       })
 
     }catch(err){
@@ -85,7 +85,7 @@ requestRouter.post("/request/review/:status/:requestId", userAuth, async(req, re
   
     const data = await connectionRequest.save();
 
-    res.json("Connection request "+status , data)
+    res.json({message: "Connection request "+status , data: data})
 
   }catch(err) {
     res.send("ERROR : " + err);

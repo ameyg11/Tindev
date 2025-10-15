@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const connectDB = async() => {
     await 
     mongoose.connect(
-        process.env.MONGO
+        "mongodb+srv://ameyg11:vJ4RlF1HCIJWj0fT@namastedev.vj7ydmu.mongodb.net/?retryWrites=true&w=majority&appName=NamasteDev/devTinder"
     )};
 
 

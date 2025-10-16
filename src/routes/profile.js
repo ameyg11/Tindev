@@ -22,12 +22,12 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     }
     const loggedInUser = req.user;
 
-    console.log(loggedInUser);
+    // console.log(loggedInUser);
     Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
 
     await loggedInUser.save();
 
-    console.log(loggedInUser);
+    // console.log(loggedInUser);
     res.json({
       message: "Profile updated successfully",
       data: loggedInUser,
@@ -39,8 +39,8 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
 profileRouter.patch("/profile/password", userAuth, async (req, res) => { try {
     const user = req.user;
-    console.log(req.body.currentPassword);
-    console.log("old pass hash: " + user.password);
+    // console.log(req.body.currentPassword);
+    // console.log("old pass hash: " + user.password);
 
     const currentPassword = req.body.currentPassword;
     const isMatched = await bcrypt.compare(currentPassword, user.password);
@@ -52,7 +52,7 @@ profileRouter.patch("/profile/password", userAuth, async (req, res) => { try {
       user.password = newPasswordHash;
       await user.save();
 
-      console.log("new pass hash: " + user.password);
+      // console.log("new pass hash: " + user.password);
       res.send("Password changed succesfully!!!!");
     }else{
       throw new Error("Enter valid password")

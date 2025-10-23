@@ -54,7 +54,12 @@ const userSchema = new mongoose.Schema({
   },
   skills: {
     type: [String],
-  }
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verificationCode: String
 },{timestamps: true});
 
 userSchema.methods.getJWT = async function() {

@@ -4,37 +4,43 @@ const bcrypt = require("bcrypt");
 const { userAuth } = require("../middleware/auth");
 
 const express = require("express");
+const { SendVerificationCode, WelcomeEmail } = require("../middleware/Email");
 const authRouter = express.Router();
 
+// --- Signup with OTP ---
 authRouter.post("/signup", async (req, res) => {
   try {
-    // validating user
-    validateSignUpData(req);
-
     const { firstName, lastName, emailId, password } = req.body;
 
-    // Encrypt passwords
-    const passwordHash = await bcrypt.hash(password, 10);
-    // console.log(passwordHash);
+    // check if already exists
+    const existingUser = await User.findOne({ emailId });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "Email already registered" });
+    }
 
-    // Creating a new instance of a User model
+    const passwordHash = await bcrypt.hash(password, 10);
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
     const user = new User({
       firstName,
       lastName,
       emailId,
       password: passwordHash,
+      verificationCode,
+      isVerified: false,
     });
 
-    const savedUser = await user.save();
+    await user.save();
 
-    const token = await savedUser.getJWT();
-    res.cookie("token", token);
+    await SendVerificationCode( emailId, verificationCode);
 
-    res.json({message: "new user logged In", data: savedUser});
+    return res.json({ success: true, message: "OTP sent to email" });
   } catch (err) {
-    res.json({message: "ERROR : "} + err);
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
+
 
 authRouter.post("/login", async (req, res) => {
   try {
@@ -71,5 +77,33 @@ authRouter.post("/logout", async (req, res) => {
   });
   res.send("Logout Successfully!!");
 });
+
+
+// --- Verify OTP ---
+authRouter.post("/verify-otp", async (req, res) => {
+  try {
+    const { emailId, otp } = req.body;
+    const user = await User.findOne({ emailId });
+
+    if (!user) return res.status(400).json({ success: false, message: "User not found" });
+    if (user.verificationCode !== otp)
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+
+    user.isVerified = true;
+    user.verificationCode = null;
+    await user.save();
+    await WelcomeEmail(user.emailId, user.firstName);
+
+
+    const token = await user.getJWT();
+    res.cookie("token", token);
+
+    return res.json({ success: true, message: "Email verified", user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Verification failed" });
+  }
+});
+
 
 module.exports = authRouter;

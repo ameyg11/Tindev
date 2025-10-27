@@ -27,7 +27,7 @@ export const Verification_Email_Template = `
               padding: 20px;
               text-align: center;
               font-size: 26px;
-              font-weight: bold;
+              font-weight: bold;    
           }
           .content {
               padding: 25px;

@@ -1,4 +1,4 @@
-require("dotenv").config();
+
 const connectDB = require("./config/database");
 const express = require("express");
 const app = express();
@@ -18,6 +18,7 @@ const requestRouter = require("./routes/request");
 const profileEdit = require("./routes/profile")
 const userRouter = require("./routes/user");
 const uploadRouter = require("./routes/upload");
+require("dotenv").config();
 
 app.use("/",authRouter);
 app.use("/",profileRouter);
@@ -28,14 +29,10 @@ app.use("/upload", uploadRouter);
 
 
 
-
-
-
-
 connectDB()
   .then(() => {
     console.log("database successfully connected");
-    app.listen(7777, () => {
+    app.listen(process.env.PORT , () => {
       console.log("Server is running successfully running on port 7777...");
     });
   })

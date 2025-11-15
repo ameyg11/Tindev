@@ -18,6 +18,7 @@ const requestRouter = require("./routes/request");
 const profileEdit = require("./routes/profile")
 const userRouter = require("./routes/user");
 const uploadRouter = require("./routes/upload");
+const paymentRouter = require("./routes/payment");
 require("dotenv").config();
 
 app.use("/",authRouter);
@@ -25,6 +26,7 @@ app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",profileEdit);
 app.use("/",userRouter);
+app.use("/", paymentRouter);
 app.use("/upload", uploadRouter);
 
 

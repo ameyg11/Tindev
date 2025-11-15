@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
         }
     }
   },
+  isPremium: {
+    type: Boolean,
+    default: false, 
+  },
   photoUrl: {
     type: String,
     default: "https://i.pinimg.com/736x/21/f6/fc/21f6fc4abd29ba736e36e540a787e7da.jpg",
